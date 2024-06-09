@@ -188,7 +188,7 @@ void  EvtRxQueueStop(NETPACKETQUEUE PacketQueue)
     auto queueContext = RxQueueGetContext(PacketQueue);
 
     TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_RECEIVE, "%!FUNC! Entry");
-    
+
     UNREFERENCED_PARAMETER(queueContext);
 
     //

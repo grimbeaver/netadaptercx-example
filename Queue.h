@@ -24,14 +24,14 @@ typedef struct _QUEUE_CONTEXT {
 
     ULONG PrivateDeviceData;  // just a placeholder
 
-} QUEUE_CONTEXT, *PQUEUE_CONTEXT;
+} QUEUE_CONTEXT, * PQUEUE_CONTEXT;
 
 WDF_DECLARE_CONTEXT_TYPE_WITH_NAME(QUEUE_CONTEXT, QueueGetContext)
 
 NTSTATUS
 NetAdapterCxExampleQueueInitialize(
     _In_ WDFDEVICE Device
-    );
+);
 
 //
 // Events from the IoQueue object

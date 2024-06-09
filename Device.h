@@ -55,7 +55,7 @@ typedef struct _DEVICE_CONTEXT
 {
     WDFDMAENABLER DmaEnabler;
     NETADAPTER NetAdapter;
-} DEVICE_CONTEXT, *PDEVICE_CONTEXT;
+} DEVICE_CONTEXT, * PDEVICE_CONTEXT;
 
 //
 // This macro will generate an inline function called DeviceGetContext
@@ -70,7 +70,7 @@ WDF_DECLARE_CONTEXT_TYPE_WITH_NAME(DEVICE_CONTEXT, DeviceGetContext)
 NTSTATUS
 NetAdapterCxExampleCreateDevice(
     _Inout_ PWDFDEVICE_INIT DeviceInit
-    );
+);
 
 EVT_WDF_DEVICE_PREPARE_HARDWARE NetAdapterCxExamplePrepareHardware;
 EVT_WDF_DEVICE_RELEASE_HARDWARE NetAdapterCxExampleReleaseHardware;

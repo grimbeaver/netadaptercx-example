@@ -3,9 +3,10 @@
 This example was created to demonstrate a bug I am running into with NetAdapterCx.
 
 I started a discussion on the OSR NTDEV community for this issue:
+
 https://community.osr.com/t/netadaptercx-ipv4-interface-failed-to-bind/58791
 
-As this driver is configured it works just fine when the `MediaType` is set to `NdisMediumIP`.  However when set to `NdisMedium802_3` it will fail to bind to both TCPIP and TCPIPV6.
+This driver works just fine when the `MediaType` in the INF is set to `NdisMediumIP`.  However when set to `NdisMedium802_3` it will fail to bind to both TCPIP and TCPIPV6 for reasons unknown.
 
 The development environment is:
  * Visual Studio 2022 (17.10.0)
@@ -22,7 +23,14 @@ Problem has also been observed on fully updated Window 10 Pro.
 ## Setup
 Edit the netadaptercx-example.inf and change the hardware ID to a PCI device in your system that you can load the driver against.  All PCI resource configuration is skipped so in theory it should work with any device.
 
-Change `MediaType` in the INF and rebuild to try the two configurations.
+Change `MediaType` in the INF by adjusting which line is commented out and rebuild to try the two configurations.
+
+```
+; Using NdisMedium802_3 the adapter will fail to bind to both TCPIP and TCPIPV6
+*MediaType              = 0     ; NdisMedium802_3
+; Using NdisMediumIP the adapter binds just fine and functions correctly
+;*MediaType              = 19    ; NdisMediumIP
+```
 
 ## Event Viewer Messages
 ```xml

@@ -27,7 +27,7 @@ NTSTATUS
 DriverEntry(
     _In_ PDRIVER_OBJECT  DriverObject,
     _In_ PUNICODE_STRING RegistryPath
-    )
+)
 /*++
 
 Routine Description:
@@ -73,15 +73,15 @@ Return Value:
     attributes.EvtCleanupCallback = NetAdapterCxExampleEvtDriverContextCleanup;
 
     WDF_DRIVER_CONFIG_INIT(&config,
-                           NetAdapterCxExampleEvtDeviceAdd
-                           );
+        NetAdapterCxExampleEvtDeviceAdd
+    );
 
     status = WdfDriverCreate(DriverObject,
-                             RegistryPath,
-                             &attributes,
-                             &config,
-                             WDF_NO_HANDLE
-                             );
+        RegistryPath,
+        &attributes,
+        &config,
+        WDF_NO_HANDLE
+    );
 
     if (!NT_SUCCESS(status)) {
         TraceEvents(TRACE_LEVEL_ERROR, TRACE_DRIVER, "WdfDriverCreate failed %!STATUS!", status);
@@ -98,7 +98,7 @@ NTSTATUS
 NetAdapterCxExampleEvtDeviceAdd(
     _In_    WDFDRIVER       Driver,
     _Inout_ PWDFDEVICE_INIT DeviceInit
-    )
+)
 /*++
 Routine Description:
 
@@ -136,7 +136,7 @@ Return Value:
 VOID
 NetAdapterCxExampleEvtDriverContextCleanup(
     _In_ WDFOBJECT DriverObject
-    )
+)
 /*++
 Routine Description:
 
