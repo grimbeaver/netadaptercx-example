@@ -1,0 +1,88 @@
+;
+; netadaptercx-example.inf
+;
+
+[Version]
+Signature   = "$WINDOWS NT$"
+Class       = Net
+ClassGuid   = {4d36e972-e325-11ce-bfc1-08002be10318}
+Provider    = %ManufacturerName%
+CatalogFile = netadaptercx-example.cat
+DriverVer   = ; TODO: set DriverVer in stampinf property pages
+PnpLockdown = 1
+
+[DestinationDirs]
+DefaultDestDir = 13
+
+[SourceDisksNames]
+1 = %DiskName%,,,""
+
+[SourceDisksFiles]
+netadaptercx-example.sys  = 1,,
+
+;*****************************************
+; Install Section
+;*****************************************
+
+[Manufacturer]
+%ManufacturerName% = Standard,NT$ARCH$.10.0...22000
+
+[Standard.NT$ARCH$.10.0...22000]
+%netadaptercx-example.DeviceDesc% = netadaptercx-example_Device, PCI\VEN_AD10&DEV_1151&SUBSYS_1221AD10 ; TODO: edit hw-id
+
+[netadaptercx-example_Device.NT]
+AddReg                  = ndi.reg
+CopyFiles               = File_Copy
+Characteristics         = 0x04  ; NCF_PHYSICAL
+BusType                 = 5     ; PCIBus
+*IfType                 = 6     ; IF_TYPE_ETHERNET_CSMACD
+
+; Using NdisMedium802_3 the adapter will fail to bind to both TCPIP and TCPIPV6
+*MediaType              = 0     ; NdisMedium802_3
+; Using NdisMediumIP the adapter binds just fine and functions correctly
+;*MediaType              = 19    ; NdisMediumIP
+
+*PhysicalMediaType      = 14    ; NdisPhysicalMedium802_3
+*IfConnectorPresent     = 1     ; true
+*ConnectionType         = 1     ; NET_IF_CONNECTION_DEDICATED
+*DirectionType          = 0     ; NET_IF_DIRECTION_SENDRECEIVE
+*AccessType             = 2     ; NET_IF_ACCESS_BROADCAST
+*HardwareLoopback       = 0     ; false
+
+[File_Copy]
+netadaptercx-example.sys
+
+[ndi.reg]
+; Note that "ndis5" simply means to bind to TCPIP; it is not a version number.
+HKR, Ndi\Interfaces,    UpperRange, 0, "ndis5"
+HKR, Ndi\Interfaces,    LowerRange, 0, "ethernet"
+HKR, Ndi,               Service,    0, netadaptercx-example
+
+;-------------- Service installation
+[netadaptercx-example_Device.NT.Services]
+AddService = netadaptercx-example,%SPSVCINST_ASSOCSERVICE%, netadaptercx-example_Service_Inst
+
+; -------------- netadaptercx-example driver install sections
+[netadaptercx-example_Service_Inst]
+DisplayName    = %netadaptercx-example.SVCDESC%
+ServiceType    = 1               ; SERVICE_KERNEL_DRIVER
+StartType      = 3               ; SERVICE_DEMAND_START
+ErrorControl   = 1               ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %13%\netadaptercx-example.sys
+AddReg=netadaptercx-example_Service_Inst_AddReg
+
+[netadaptercx-example_Service_Inst_AddReg]
+HKR,,                   BootFlags, 0x00010001, 1 ; CM_SERVICE_NETWORK_BOOT_LOAD
+
+[netadaptercx-example_Device.NT.Wdf]
+KmdfService = netadaptercx-example, netadaptercx-example_wdfsect
+
+[netadaptercx-example_wdfsect]
+KmdfLibraryVersion = $KMDFVERSION$
+
+[Strings]
+SPSVCINST_ASSOCSERVICE = 0x00000002
+ManufacturerName = "Some Company" ;TODO: Replace with your manufacturer name
+DiskName = "netadaptercx-example Installation Disk"
+netadaptercx-example.DeviceDesc = "netadaptercx-example Device"
+netadaptercx-example.SVCDESC = "netadaptercx-example Service"
